@@ -1,28 +1,11 @@
 ## Usage
 
-```console
-git clone https://github.com/godicheol/javascript-module-builder.git && cd javascript-module-builder && npm install && npm run unlink
-```
+1. Copy "merge-documents.jsx"
+2. Open InDesign
+3. Window > Utilities > Scripts
+4. Right click on "User" and choose "Reveal in Explorer" or "Reveal in Finder"
+5. Paste in "Scripts Panel" directory.
 
-```js
-// package.json
-...
-"bundleDependencies": [
-    // add installed library name
-]
-...
 ```
-
-```console
-npm pack
-```
-
-```console
-npm install blah-blah.tgz
-```
-
-```js
-import MyModule from 'javascript-module-builder';
-const {sum} = MyModule;
-sum(1, 2); // 3
+"~/AppData/Roaming/Adobe/InDesign/Version%2017.0/de_DE/Scripts/Scripts%20Panel"
 ```
