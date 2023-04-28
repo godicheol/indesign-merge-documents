@@ -1,89 +1,86 @@
 #target indesign;
 
-var docs = app.documents;
+if (app.documents.length < 1) {
+    alert("No documents are open. Please open a document and try again.");
+} else {
+    var newDoc = createDoc();
 
-if (!docs.length < 1) {
-    alert("No documents are open. Please open a document and try again.", true);
-    return false;
-}
+    addSpreads(newDoc);
 
-var newDoc = createDoc();
+    newDoc.pages[0].remove(); // blank
+    newDoc.sections.everyItem().continueNumbering = true; // reset pages number
 
-var newPages = getPages();
-
-for(var i = 0; i < newPages.length; i++) {
-    var page = newPages[i];
-    newDoc.pages.add(LocationOptions.AFTER, page);
-}
-
-saveDoc(newDoc);
-
-function getPages() {
-    var result = [];
-    var ok;
-    var i = 0;
-    while(true) {
-        ok = false;
-        for (var j = 0; j < docs.length; j++) {
-            var doc = docs[j];
-            var page = doc.pages[i];
-            if (typeof(page) !== "undefined") {
-                ok = true;
-                result.push(page);
+    function addSpreads(targetDoc) {
+        for (var i = 0; i < app.documents.length; i++) {
+            var doc = app.documents[i];
+            if (targetDoc === doc) {
+                continue;
+            }
+            for (var j = 0; j < doc.spreads.length; j++) {
+                var spread = doc.spreads[j];
+                spread.duplicate(LocationOptions.AT_END, targetDoc);
             }
         }
-        if (!ok) {
-            break;
-        }
-        i++;
     }
-    return result;
-}
 
-function copyLayer(sourceLayer, destLayer) {
-    sourceLayer.pageItems.everyItem().duplicate(destLayer);
-}
+    // function addPages(targetDoc) {
+    //     var ok;
+    //     var i = 0;
+    //     while(true) {
+    //         ok = false;
+    //         for (var j = app.documents.length - 1; j >= 0; j--) {
+    //             var doc = app.documents[j];
+    //             if (targetDoc === doc) {
+    //                 continue;
+    //             }
+    //             if (i < doc.pages.length) {
+    //                 ok = true;
+    //                 var page = doc.pages[i];
+    //                 var newPage = targetDoc.pages.add();
+    //                 // page.duplicate(LocationOptions.AT_END, lastPage);
+    //             }
+    //         }
+    //         if (!ok) {
+    //             break;
+    //         }
+    //         i += 2;
+    //     }
+    // }
 
-function getCurrentDirPath() {
-    return app.activeDocument.parent;
-}
-
-function getCurrentDocPath() {
-    return app.activeDocument.parent + "/" + app.activeDocument.name;
-}
-
-function getCurrentDocName() {
-    return app.activeDocument.name.replace(/\.indd$/i, "");
-}
-
-function getCurrentDoc() {
-    return app.activeDocument;
-}
-
-function getMaxLayerLength() {
-    var n = 0;
-    for (var i = 0; i < app.documents.length; i++) {
-        var doc = app.documents[i];
-        var layers = doc.layers;
-        if (n < layers.length) {
-            n = layers.length;
-        }
+    function copyPage(page, pageRef) {
+        page.duplicate(LocationOptions.AT_END, pageRef);
     }
-    return n;
-}
 
-function generatePath() {
-    return app.activeDocument.parent + "\/" + "merged_" + Date.now() + ".indd";
-}
+    function isSameDoc(a, b) {
+        return a === b;
+    }
 
-function createDoc() {
-    return app.documents.add();
-}
+    function getCurrentDirPath() {
+        return app.activeDocument.parent;
+    }
 
-function saveDoc(doc) {
-    var destPath = generatePath();
-    doc.save(new File(destPath));
-}
+    function getCurrentDocPath() {
+        return app.activeDocument.parent + "/" + app.activeDocument.name;
+    }
 
-// end
-return true;
+    function getCurrentDocName() {
+        return app.activeDocument.name.replace(/\.indd$/i, "");
+    }
+
+    function getCurrentDoc() {
+        return app.activeDocument;
+    }
+
+    function generatePath() {
+        return app.activeDocument.parent + "\/" + "merged_" + Date.now() + ".indd";
+    }
+
+    function createDoc() {
+        return app.documents.add();
+    }
+
+    function saveDoc(doc) {
+        var destPath = generatePath();
+        doc.save(new File(destPath));
+    }
+}
