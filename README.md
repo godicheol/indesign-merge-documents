@@ -1,5 +1,7 @@
 ## Usage
 
+- [Reference](https://www.indesignjs.de/extendscriptAPI/indesign-latest/#about.html)
+
 1. Copy "merge-documents.jsx"
 2. Open InDesign
 3. Window > Utilities > Scripts
